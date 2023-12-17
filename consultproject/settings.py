@@ -38,15 +38,25 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-    'djoser'
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.google',
+    'djoser',
+    'authapp',
+    'corsheaders',
+    'consultentapp',
+    'bookingapp'
 ]
-
+CORS_ORIGIN_ALLOW_ALL = True
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    "allauth.account.middleware.AccountMiddleware",
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
@@ -68,29 +78,46 @@ TEMPLATES = [
         },
     },
 ]
-
+# AUTH_USER_MODEL = 'authapp.CustomUser'
 WSGI_APPLICATION = 'consultproject.wsgi.application'
 
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_USERNAME_REQUIRED = False
+ACCOUNT_AUTHENTICATION_METHOD = 'email'
+ACCOUNT_EMAIL_VERIFICATION = 'optional'
+LOGIN_REDIRECT_URL = '/api/generate-token'
+
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        'APP': {
+            'client_id': '1027394913320-j3uue43cnlj1mrge46ctgohkpo1okjhn.apps.googleusercontent.com',
+            'secret': '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',
+            'key': ''
+        },
+        'SCOPE': [
+            'profile',
+            'email',
+        ],
+        'AUTH_PARAMS': {
+            'access_type': 'online',
+        }
+    }
+}
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 DATABASES = {
-    # 'default': {
-    #     'ENGINE': 'django.db.backends.sqlite3',
-    #     'NAME': BASE_DIR / 'db.sqlite3',
-    # }
-    'default': {
+    'default':{
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'consulthub',
         'USER': 'rhushi',
         'PASSWORD': 'password',
         'HOST': 'localhost',
         'PORT': '3306',
-      
     },
+   
 }
-
 REST_FRAMEWORK = {
    'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
@@ -131,7 +158,11 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-STATIC_URL = 'static/'
+MEDIA_ROOT =  BASE_DIR / "media"
+MEDIA_URL = '/media/'
+STATIC_URL = '/static/'
+STATIC_ROOT= BASE_DIR / 'assets'
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
