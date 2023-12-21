@@ -13,7 +13,6 @@ class BookMeetingApiView(CreateAPIView):
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
             booking = serializer.save()
-            print(serializer.data)
             return Response({"data" : serializer.data})
         else:
             return Response({"message":"please enter valid data"})

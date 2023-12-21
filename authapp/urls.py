@@ -1,5 +1,5 @@
 from django.urls import path, include
-from .views import RegisterAPIView, IsAuth
+from .views import *
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
@@ -11,4 +11,7 @@ urlpatterns = [
     path('token/verify/', TokenVerifyView.as_view(), name='token_verify'),
     path('register-user', RegisterAPIView.as_view()),
     path('is-auth', IsAuth.as_view()),
+    path('generate-token', GoogleLogin.as_view(), name="generate-token"),
+    path('user-info', UserInfoApiView.as_view(), name="user-info"),
+
 ]

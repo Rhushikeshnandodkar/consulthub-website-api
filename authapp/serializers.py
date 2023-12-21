@@ -19,7 +19,7 @@ class UserRegisterSerializer(serializers.ModelSerializer):
         if User.objects.filter(email=email).exists():
             raise serializers.ValidationError("email allready exists")
         if password == password_again:
-            user = User(username=username)
+            user = User(username=username, email=email)
             user.set_password(password)
             user.save()
             return user

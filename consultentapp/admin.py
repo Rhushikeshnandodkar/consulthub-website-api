@@ -8,3 +8,6 @@ admin.site.register(ConsultentProfile, ConsultentAdmin)
 admin.site.register(LanguageModel)
 admin.site.register(LocationModel)
 admin.site.register(CategoryModel)
+class ReviewAdmin(admin.ModelAdmin):
+    list_display = ['user', 'consultent_profile', 'date']
+admin.site.register(ReviewModel, ReviewAdmin)
