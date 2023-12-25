@@ -4,4 +4,5 @@ class BookingSerializer(serializers.ModelSerializer):
     class Meta:
         model = ConsultBooking
         fields = '__all__'
+
         
