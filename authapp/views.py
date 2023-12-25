@@ -56,6 +56,7 @@ class UserInfoApiView(APIView):
             return Response({
                 "username" : request.user.username,
                 "email": request.user.email,
+                "id": request.user.id
              }, status=status.HTTP_200_OK)
         else:
             message = {"message":"user is not authenticated"}

@@ -2,6 +2,11 @@ from django.db import models
 from django.contrib.auth.models import User
 from consultentapp.models import ConsultentProfile
 # Create your models here.
+class TimeSlotModel(models.Model):
+    consultent
+    day = models.DateField()
+    time = models.TimeField()
+
 class ConsultBooking(models.Model):
     booking_user = models.ForeignKey(User, on_delete=models.CASCADE)
     consultent = models.ForeignKey(ConsultentProfile, on_delete=models.CASCADE)

@@ -62,7 +62,12 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'consultproject.urls'
-
+from datetime import timedelta
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(days=30),  # Set the desired lifetime
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=60),  # Set the desired lifetime for refresh tokens
+    'ALGORITHM': 'HS256',  # Use the desired algorithm
+}
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
