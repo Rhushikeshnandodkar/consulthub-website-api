@@ -83,7 +83,7 @@ TEMPLATES = [
         },
     },
 ]
-# AUTH_USER_MODEL = 'authapp.CustomUser'
+AUTH_USER_MODEL = 'authapp.CustomUser'
 WSGI_APPLICATION = 'consultproject.wsgi.application'
 
 ACCOUNT_EMAIL_REQUIRED = True

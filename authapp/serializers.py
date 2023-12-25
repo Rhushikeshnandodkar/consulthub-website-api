@@ -1,5 +1,6 @@
 # from .models import CustomUser
 from django.contrib.auth.models import User
+from .models import *
 from rest_framework import serializers
 class UserRegisterSerializer(serializers.ModelSerializer):
     username = serializers.CharField(required=True, write_only=True)
@@ -8,18 +9,20 @@ class UserRegisterSerializer(serializers.ModelSerializer):
     password_again = serializers.CharField(required=True, write_only=True)
 
     class Meta:
-        model = User
-        fields = ['username', 'email', 'password', 'password_again']
+        model = CustomUser
+        fields = ['username', 'email', 'password', 'password_again', 'phone_number']
 
     def create(self, validated_data):
         username = validated_data.get('username')
         email = validated_data.get('email')
         password = validated_data.get('password')
         password_again = validated_data.get('password_again')
-        if User.objects.filter(email=email).exists():
+        phone = validated_data.get('phone_number')
+
+        if CustomUser.objects.filter(email=email).exists():
             raise serializers.ValidationError("email allready exists")
         if password == password_again:
-            user = User(username=username, email=email)
+            user = CustomUser(username=username, email=email, phone_number=phone)
             user.set_password(password)
             user.save()
             return user

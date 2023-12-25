@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from authapp.models import *
 from django.db.models import Avg
 # Create your models here.
 class CategoryModel(models.Model):
@@ -18,7 +19,7 @@ class LanguageModel(models.Model):
         return self.language_field
     
 class ConsultentProfile(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     consultent_name = models.CharField(max_length=300, null=True, blank=True)
     title = models.CharField(max_length=400, null=True, blank=True)
     profile_image = models.ImageField(upload_to='profile-pics')
@@ -40,7 +41,7 @@ class ConsultentProfile(models.Model):
     
     
 class ReviewModel(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     consultent_profile = models.ForeignKey(ConsultentProfile, on_delete=models.CASCADE)
     review_title = models.TextField(max_length=600, null=True, blank=True)
     review_text = models.TextField(null=True, blank=True)
