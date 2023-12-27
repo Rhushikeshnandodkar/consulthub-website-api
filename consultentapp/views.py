@@ -60,28 +60,14 @@ class FilterConsultentsApiView(ListAPIView):
             category_id = CategoryModel.objects.get(cateogry_field=category)
             queryset = ConsultentProfile.objects.filter(category=category_id)
             return queryset
-    # def get(self, request, *args, **kwargs):
-    #     queryset = ConsultentProfile.objects.all()
-    #     language = self.request.query_params.get('language', None)
-    #     category = self.request.query_params.get('category', None)
-    #     print(language)
-        # if language and category==None:
-        #     language_id = LanguageModel.objects.get(language_field=language)
-        #     queryset = ConsultentProfile.objects.filter(languages=language_id)
-        #     serializer = ConsultentDetailSerializer(queryset, many=True)
-        #     print(serializer.data)
-        #     return Response(serializer.data)
-    #     if category and language==None:
-            # category_id = CategoryModel.objects.get(cateogry_field=category)
-            # queryset = ConsultentProfile.objects.filter(category=category_id)
-    #         serializer = ConsultentListSerializer(queryset, many=True)
-    #         return Response(serializer.data)
-    #     if category and language:
-    #         category_id = CategoryModel.objects.get(cateogry_field=category)
-    #         language_id = LanguageModel.objects.get(language_field=language)
-    #         queryset = ConsultentProfile.objects.filter(category=category_id, languages=language_id)
-    #         serializer = ConsultentListSerializer(queryset, many=True)
-    #         return Response(serializer.data)
 
-
-    #     return Response({"message" : "please give valid data"})
+class FetchReviewsApiView(ListAPIView):
+    queryset = ReviewModel.objects.all()
+    serializer_class = ConsultentReviewSerializer
+    lookup_field = 'rid'
+    def get_queryset(self):
+        review_id = self.kwargs['rid']
+        print(review_id)
+        c_profile = ConsultentProfile.objects.get(id=review_id)
+        queryset = ReviewModel.objects.filter(consultent_profile=c_profile)
+        return queryset

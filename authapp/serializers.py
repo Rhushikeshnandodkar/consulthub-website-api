@@ -26,3 +26,5 @@ class UserRegisterSerializer(serializers.ModelSerializer):
             user.set_password(password)
             user.save()
             return user
+        else:
+            serializers.ValidationError("passwords are not equal")

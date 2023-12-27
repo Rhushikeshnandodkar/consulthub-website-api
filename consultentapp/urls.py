@@ -8,4 +8,7 @@ urlpatterns = [
     path('languages-list', FetchLanguagesApiView.as_view()),
     path('categories-list', FetchCategoryApiView.as_view()),
     path('filter-consultents', FilterConsultentsApiView.as_view()),
+    path('filter-consultents', FilterConsultentsApiView.as_view()),
+    path('fetch-reviews/<int:rid>',  FetchReviewsApiView.as_view()),
+
 ]
