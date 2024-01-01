@@ -13,5 +13,7 @@ urlpatterns = [
     path('is-auth', IsAuth.as_view()),
     path('generate-token', GoogleLogin.as_view(), name="generate-token"),
     path('user-info', UserInfoApiView.as_view(), name="user-info"),
-
+    path('validate-otp', ValidateOptApiView.as_view(), name="user-info"),
+    path('google-signup', GoogleSignupnApiView.as_view(), name="google-signup"),
+    path('google-login', GoogleLoginApiView.as_view(), name="google-login"),
 ]

@@ -7,6 +7,9 @@ from google.oauth2 import id_token
 from google.auth.transport import requests as google_requests
 from django.contrib.auth.models import User
 from rest_framework import status
+from .models import *
+from django.contrib.auth import authenticate
+import requests
 class RegisterAPIView(APIView):
     serializer_class = UserRegisterSerializer
     def post(self, request, format=None):
@@ -21,6 +24,98 @@ class RegisterAPIView(APIView):
             }
             return Response(serializer_data)
         return Response(serializer.errors)
+    
+class GoogleSignupnApiView(APIView):
+    def post(self, request):
+        access_token = request.data.get('access_token')
+        if access_token:
+            headers = {
+                'Authorization': f'Bearer {access_token}',
+                'Accept': 'application/json',               
+            }
+            google_api_url = 'https://www.googleapis.com/oauth2/v1/userinfo'
+            params = {'access_token': access_token}
+            try:
+                response = requests.get(google_api_url, params=params, headers=headers)
+                response.raise_for_status()
+                user_info = response.json()
+                email = user_info.get('email')
+                first_name = user_info.get('given_name')
+                last_name = user_info.get('family_name')
+
+                if CustomUser.objects.filter(email=email).exists():
+                    message = {"message":"email allready exists"}
+                    return Response(message, status=status.HTTP_409_CONFLICT)
+                else:
+                    user = CustomUser.objects.create(email=email, username=email, first_name=first_name, last_name=last_name)
+                    user.save()
+                    refresh = RefreshToken.for_user(user)
+                    serializer_data = {
+                        'refresh':str(refresh),
+                        'access':str(refresh.access_token),
+                        'user':user_info
+                    }
+                    return Response(serializer_data, status=status.HTTP_200_OK)
+            except requests.exceptions.RequestException as err:
+                print(err)
+                return Response({"message": "something went wrong", "err": err})
+        else:
+            return Response({"message":"please provide token"})
+        
+class GoogleLoginApiView(APIView):
+    def post(self, request):
+        access_token = request.data.get('access_token')
+        if access_token:
+            headers = {
+                'Authorization': f'Bearer {access_token}',
+                'Accept': 'application/json',               
+            }
+            google_api_url = 'https://www.googleapis.com/oauth2/v1/userinfo'
+            params = {'access_token': access_token}
+            try:
+                response = requests.get(google_api_url, params=params, headers=headers)
+                response.raise_for_status()
+                user_info = response.json()
+                email = user_info.get('email')
+                first_name = user_info.get('given_name')
+                last_name = user_info.get('family_name')
+
+                if CustomUser.objects.filter(email=email).exists():
+                    user = CustomUser.objects.get(email=email)
+                    refresh = RefreshToken.for_user(user)
+                    serializer_data = {
+                        'refresh':str(refresh),
+                        'access':str(refresh.access_token),
+                        'user':user_info
+                    }
+                    return Response(serializer_data, status=status.HTTP_200_OK)
+                else:
+                    message = {"message": "User with given Email not exist"}
+                    return Response(message, status=status.HTTP_401_UNAUTHORIZED)
+            except requests.exceptions.RequestException as err:
+                print(err)
+                return Response({"message": "something went wrong", "err": err})
+        else:
+            return Response({"message":"please provide token"})
+class ValidateOptApiView(APIView):
+    def post(self, request):
+        phone_number = request.data.get('phone_number')
+        otp_get = request.data.get('otp')
+        print(otp_get)
+
+        if CustomUser.objects.filter(phone_number=phone_number).exists():
+            user = CustomUser.objects.get(phone_number=phone_number)
+            if user.otp == otp_get:
+                user.is_active = True
+                user.save()
+                return Response({"message": "otp varified"})
+            else:
+                user = CustomUser.objects.get(phone_number=phone_number)
+                user.delete()
+                return Response({"message" : "otp is wrong please try again"})
+        else:
+            return Response({"message" : "user does not exists"})
+
     
 class IsAuth(APIView):
     serializer_class = UserRegisterSerializer

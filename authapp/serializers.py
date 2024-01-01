@@ -2,6 +2,7 @@
 from django.contrib.auth.models import User
 from .models import *
 from rest_framework import serializers
+import random
 class UserRegisterSerializer(serializers.ModelSerializer):
     username = serializers.CharField(required=True, write_only=True)
     email = serializers.CharField(required=True, write_only=True)
@@ -13,16 +14,14 @@ class UserRegisterSerializer(serializers.ModelSerializer):
         fields = ['username', 'email', 'password', 'password_again', 'phone_number']
 
     def create(self, validated_data):
-        username = validated_data.get('username')
         email = validated_data.get('email')
         password = validated_data.get('password')
         password_again = validated_data.get('password_again')
-        phone = validated_data.get('phone_number')
 
         if CustomUser.objects.filter(email=email).exists():
             raise serializers.ValidationError("email allready exists")
         if password == password_again:
-            user = CustomUser(username=username, email=email, phone_number=phone)
+            user = CustomUser(username=email, email=email)
             user.set_password(password)
             user.save()
             return user
