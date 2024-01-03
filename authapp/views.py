@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from .serializers import UserRegisterSerializer
+from .serializers import *
 from rest_framework_simplejwt.tokens import RefreshToken
 from google.oauth2 import id_token
 from google.auth.transport import requests as google_requests
@@ -9,7 +9,9 @@ from django.contrib.auth.models import User
 from rest_framework import status
 from .models import *
 from django.contrib.auth import authenticate
+from rest_framework.generics import *
 import requests
+from rest_framework import filters
 class RegisterAPIView(APIView):
     serializer_class = UserRegisterSerializer
     def post(self, request, format=None):
@@ -146,14 +148,32 @@ class GoogleLogin(APIView):
             })
         
 class UserInfoApiView(APIView):
+    serializer_class = UserInfoSerailzer
     def get(self, request):
         if request.user.is_authenticated:
-            return Response({
-                "username" : request.user.username,
-                "email": request.user.email,
-                "phone" : request.user.phone_number,
-                "id": request.user.id
-             }, status=status.HTTP_200_OK)
+            serializer = UserInfoSerailzer(request.user)
+            return Response(serializer.data, status=status.HTTP_200_OK)
         else:
             message = {"message":"user is not authenticated"}
             return Response(message, status=status.HTTP_401_UNAUTHORIZED)
+    def patch(self, request, format=None):
+        if request.user.is_authenticated:
+            # id = request.data.get('id')
+            model = CustomUser.objects.get(id=request.user.id)
+            print(model)
+            serializer = UserInfoSerailzer(model, data=request.data, partial=True)
+            print(serializer)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data)
+            else:
+                print(serializer.errors)
+                return Response({"message": "give real data"})
+        messsage = {"message": "please login"}
+        return Response(messsage, status=status.HTTP_401_UNAUTHORIZED)
+    
+class GetInteresetsApiView(ListAPIView):
+    serializer_class = InterestSeralizer
+    queryset = InterestModel.objects.all()
+    search_fields = ['interest']
+    filter_backends = (filters.SearchFilter,)
