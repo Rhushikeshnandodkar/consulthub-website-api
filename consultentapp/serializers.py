@@ -18,7 +18,7 @@ class ConsultentListSerializer(serializers.ModelSerializer):
     average_rating = serializers.SerializerMethodField()
     class Meta:
         model = ConsultentProfile
-        fields = ['id', 'consultent_name', 'title', 'total_meetings', 'average_rating', 'rate', 'profile_image', 'languages', 'category']
+        fields = ['id', 'consultent_name', 'title', 'total_meetings', 'youtube_url', 'instagram_url', 'linkedin_url', 'average_rating', 'rate', 'profile_image', 'languages', 'category']
 
     def get_average_rating(self, obj):
         return obj.average_rating()
