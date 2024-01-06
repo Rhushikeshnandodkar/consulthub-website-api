@@ -44,7 +44,7 @@ class FetchLanguagesApiView(ListAPIView):
     serializer_class = LanguageSerializer
 
 class FetchCategoryApiView(ListAPIView):
-    queryset = CategoryModel.objects.all()
+    queryset = InterestModel.objects.all()
     serializer_class = CategorySerializer
 
 class FilterConsultentsApiView(ListAPIView):
@@ -61,7 +61,7 @@ class FilterConsultentsApiView(ListAPIView):
             queryset = ConsultentProfile.objects.filter(languages=language_id)
             return queryset
         if category and language == None:
-            category_id = CategoryModel.objects.get(cateogry_field=category)
+            category_id = InterestModel.objects.get(interest=category)
             queryset = ConsultentProfile.objects.filter(category=category_id)
             return queryset
 

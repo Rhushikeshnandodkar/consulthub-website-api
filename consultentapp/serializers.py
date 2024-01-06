@@ -1,10 +1,11 @@
 from rest_framework import serializers
 from .models import *
+from authapp.models import InterestModel
 from django.conf import settings
 
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
-        model = CategoryModel
+        model = InterestModel
         fields = '__all__'
 
 class LanguageSerializer(serializers.ModelSerializer):

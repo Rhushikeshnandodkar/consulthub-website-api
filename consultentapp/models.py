@@ -25,7 +25,7 @@ class ConsultentProfile(models.Model):
     title = models.CharField(max_length=400, null=True, blank=True)
     profile_image = models.ImageField(upload_to='profile-pics')
     age = models.IntegerField(null=True, blank=True)
-    category = models.ManyToManyField(CategoryModel)
+    category = models.ManyToManyField(InterestModel)
     linkedin_url = models.URLField(null=True, blank=True)
     instagram_url = models.URLField(null=True, blank=True)
     youtube_url = models.URLField(null=True, blank=True)
