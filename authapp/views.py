@@ -177,3 +177,4 @@ class GetInteresetsApiView(ListAPIView):
     queryset = InterestModel.objects.all()
     search_fields = ['interest']
     filter_backends = (filters.SearchFilter,)
+

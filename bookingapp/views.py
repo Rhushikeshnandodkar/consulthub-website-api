@@ -17,4 +17,14 @@ class BookMeetingApiView(CreateAPIView):
         instance = serializer.save()
         return Response({"data": serializer.data}, status=status.HTTP_201_CREATED)
 
+class UserBookingsApiView(ListAPIView):
+    queryset = ConsultBooking.objects.all()
+    serializer_class = ShowBookingSerializer
+    permission_classes = [IsAuthenticated]
+    def get_queryset(self):
+        user = self.request.user
+        print(user)
+        user_bookings = ConsultBooking.objects.filter(booking_user=user)
+        return user_bookings
+
 

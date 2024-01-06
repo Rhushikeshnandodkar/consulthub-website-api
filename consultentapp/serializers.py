@@ -22,6 +22,13 @@ class ConsultentListSerializer(serializers.ModelSerializer):
 
     def get_average_rating(self, obj):
         return obj.average_rating()
+    
+class SpeakerListSerailizer(serializers.ModelSerializer):
+    category = CategorySerializer(many=True)
+    languages = LanguageSerializer(many=True)   
+    class Meta:
+        model = SpeakersModel
+        fields = ['id', 'speaker_name', 'title', 'total_events', 'youtube_url', 'instagram_url', 'linkedin_url', 'rate', 'profile_image', 'languages', 'category']
 
 class ConsultentDetailSerializer(serializers.ModelSerializer):
     category = CategorySerializer(many=True)

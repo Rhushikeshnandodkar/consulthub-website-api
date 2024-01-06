@@ -11,6 +11,7 @@ class ConsultBooking(models.Model):
     consultent = models.ForeignKey(ConsultentProfile, on_delete=models.CASCADE)
     amount = models.IntegerField(null=True, blank=True)
     is_paid = models.BooleanField(default=False)
+    date = models.DateField(auto_now_add=True, null=True, blank=True)
 
 
     def __str__(self):

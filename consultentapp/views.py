@@ -13,6 +13,10 @@ class ConsultentsListApiView(ListAPIView):
     serializer_class = ConsultentListSerializer
     queryset = ConsultentProfile.objects.all()
 
+class SpeakersListApiView(ListAPIView):
+    serializer_class = SpeakerListSerailizer
+    queryset = SpeakersModel.objects.all()
+
 class ConsultentDetailApiView(RetrieveAPIView):
     serializer_class = ConsultentDetailSerializer
     queryset = ConsultentProfile.objects.all()

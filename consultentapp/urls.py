@@ -10,5 +10,8 @@ urlpatterns = [
     path('filter-consultents', FilterConsultentsApiView.as_view()),
     path('filter-consultents', FilterConsultentsApiView.as_view()),
     path('fetch-reviews/<int:rid>',  FetchReviewsApiView.as_view()),
+    path('speakers-list',  SpeakersListApiView.as_view()),
+
+
 
 ]
