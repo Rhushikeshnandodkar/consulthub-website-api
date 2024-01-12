@@ -11,7 +11,7 @@ urlpatterns = [
     path('filter-consultents', FilterConsultentsApiView.as_view()),
     path('fetch-reviews/<int:rid>',  FetchReviewsApiView.as_view()),
     path('speakers-list',  SpeakersListApiView.as_view()),
-
-
+    path('post-reviews',  PubLishReviewApiView.as_view()),
+    path('check-reviews',  ReviweValidityApiView.as_view()),
 
 ]
