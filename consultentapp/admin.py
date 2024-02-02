@@ -14,3 +14,6 @@ admin.site.register(ReviewModel, ReviewAdmin)
 class SpeakerAdmin(admin.ModelAdmin):
     list_display = ['speaker_name', 'location']
 admin.site.register(SpeakersModel, SpeakerAdmin)
+admin.site.register(Event)
+admin.site.register(Community)
+admin.site.register(Community_cateogry)

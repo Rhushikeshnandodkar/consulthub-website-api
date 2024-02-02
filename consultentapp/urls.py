@@ -13,5 +13,8 @@ urlpatterns = [
     path('speakers-list',  SpeakersListApiView.as_view()),
     path('post-reviews',  PubLishReviewApiView.as_view()),
     path('check-reviews',  ReviweValidityApiView.as_view()),
+    path('upcomming-event',  EventApiView.as_view()),
+    path('community',  FetchCommunityApiView.as_view()),
+
 
 ]

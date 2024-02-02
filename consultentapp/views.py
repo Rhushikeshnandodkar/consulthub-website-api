@@ -105,14 +105,20 @@ class ReviweValidityApiView(APIView):
                     data = {
                         'can_post' : False
                     }
-                    return Response(data, status=status.HTTP_400_BAD_REQUEST)
+                    return Response(data, status=status.HTTP_200_OK)
                 else:
                     data = {
                         'can_post' : True
                     }
                     return Response(data, status=status.HTTP_200_OK)
+            else:
+                data = {
+                    'can_post' : False
+                }
+                return Response(data, status=status.HTTP_200_OK)
         else:
             return Response({"message": "user not authenticated"}, status=status.HTTP_401_UNAUTHORIZED)
+
 class FetchReviewsApiView(ListAPIView):
     queryset = ReviewModel.objects.all()
     serializer_class = ConsultentReviewSerializer
@@ -123,3 +129,17 @@ class FetchReviewsApiView(ListAPIView):
         c_profile = ConsultentProfile.objects.get(id=review_id)
         queryset = ReviewModel.objects.filter(consultent_profile=c_profile)
         return queryset
+from django.core.exceptions import ObjectDoesNotExist
+class EventApiView(APIView):
+    def get(self, request):
+        upcomming_event_exist = Event.objects.filter(upcomming=True).exists()
+        if upcomming_event_exist:
+            upcomming_event = Event.objects.filter(upcomming=True).first()
+            serializer = EventSerializer(upcomming_event)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response({"message":"data does not exists"})
+        
+class FetchCommunityApiView(ListAPIView):
+    queryset = Community.objects.all()
+    serializer_class = CommunitySerializer

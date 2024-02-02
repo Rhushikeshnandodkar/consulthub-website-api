@@ -80,3 +80,42 @@ class Speakers(CustomUser):
     objects = SpeakerManager()
     class Meta:
         proxy = True
+
+class Event(models.Model):
+    speaker_name = models.CharField(max_length=200, null=True, blank=True)
+    speaker_tagline = models.CharField(max_length=800, null=True, blank=True)
+    achievement_one = models.CharField(max_length=800, null=True, blank=True)
+    subachievement_one = models.CharField(max_length=800, null=True, blank=True)
+    achievement_two = models.CharField(max_length=800, null=True, blank=True)
+    subachievement_two = models.CharField(max_length=800, null=True, blank=True)
+    achievement_three = models.CharField(max_length=800, null=True, blank=True)
+    subachievement_three = models.CharField(max_length=800, null=True, blank=True)
+    achievement_four = models.CharField(max_length=800, null=True, blank=True)
+    subachievement_four = models.CharField(max_length=800, null=True, blank=True)
+    event_date = models.DateField()
+    event_time = models.TimeField()
+    profile_image = models.ImageField(upload_to='profile-pics', null=True, blank=True)
+    upcomming = models.BooleanField(default=False)
+    insta_url = models.URLField(null=True, blank=True)
+    linkedin_url = models.URLField(blank=True, null=True)
+
+    def __str__(self):
+        return self.speaker_name
+    
+class Community_cateogry(models.Model):
+    cat = models.CharField(max_length=300)
+    def __str__(self):
+        return self.cat
+    
+
+class Community(models.Model):
+    community_name = models.CharField(max_length=300)
+    community_image = models.ImageField(upload_to='community-pics', null=True, blank=True)
+    members = models.IntegerField()
+    community_desc = models.TextField(null=True, blank=True)
+    url = models.URLField(null=True, blank=True)
+    cateogry = models.ForeignKey(Community_cateogry, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.community_name
+

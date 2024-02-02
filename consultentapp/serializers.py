@@ -48,3 +48,21 @@ class ConsultentReviewSerializer(serializers.ModelSerializer):
     class Meta:
         model = ReviewModel
         fields = '__all__'
+
+class CustomTimeField(serializers.TimeField):
+    def to_representation(self, value):
+        # Convert the time to 12-hour clock format
+        if value:
+            return value.strftime("%I:%M %p")
+        return None
+
+class EventSerializer(serializers.ModelSerializer):
+    event_time = CustomTimeField()
+    class Meta:
+        model = Event
+        fields = '__all__'
+
+class CommunitySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Community
+        fields = '__all__'
