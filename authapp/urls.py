@@ -17,5 +17,9 @@ urlpatterns = [
     path('google-signup', GoogleSignupnApiView.as_view(), name="google-signup"),
     path('google-login', GoogleLoginApiView.as_view(), name="google-login"),
     path('get-interests', GetInteresetsApiView.as_view(), name="get-interest"),
+    path('get-otp', GenerateOtpApiView.as_view(), name="get-otp"),
+    path('verify-otp', VerifyOtpApiView.as_view(), name="verify-otp"),
+
+
 
 ]

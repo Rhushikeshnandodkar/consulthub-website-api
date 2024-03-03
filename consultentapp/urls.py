@@ -15,6 +15,4 @@ urlpatterns = [
     path('check-reviews',  ReviweValidityApiView.as_view()),
     path('upcomming-event',  EventApiView.as_view()),
     path('community',  FetchCommunityApiView.as_view()),
-
-
 ]

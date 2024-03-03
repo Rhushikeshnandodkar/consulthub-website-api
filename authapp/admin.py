@@ -12,7 +12,7 @@ class CustomUserAdmin(UserAdmin):
         ('Permissions', {'fields': ('is_staff', 'is_active',
          'is_superuser', 'groups', 'user_permissions')}),
         ('Dates', {'fields': ('last_login', 'date_joined')}),
-        ('Otp', {'fields': ('otp', )})
+        ('Otp', {'fields': ('otp', 'is_profile_completed')})
     )
     add_fieldsets = (
         (None, {

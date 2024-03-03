@@ -11,7 +11,11 @@ from .models import *
 from django.contrib.auth import authenticate
 from rest_framework.generics import *
 import requests
+from django.utils.crypto import get_random_string
+from twilio.rest import Client
 from rest_framework import filters
+from django.core.cache import cache
+from django.utils import timezone
 class RegisterAPIView(APIView):
     serializer_class = UserRegisterSerializer
     def post(self, request, format=None):
@@ -167,8 +171,8 @@ class UserInfoApiView(APIView):
                 serializer.save()
                 return Response(serializer.data)
             else:
-                print(serializer.errors)
-                return Response({"message": "give real data"})
+                messsage = {"message": "Phone number allready exists"}
+                return Response(messsage, status=status.HTTP_409_CONFLICT)
         messsage = {"message": "please login"}
         return Response(messsage, status=status.HTTP_401_UNAUTHORIZED)
     
@@ -177,4 +181,73 @@ class GetInteresetsApiView(ListAPIView):
     queryset = InterestModel.objects.all()
     search_fields = ['interest']
     filter_backends = (filters.SearchFilter,)
+
+
+class GenerateOtpApiView(APIView):
+    serializer_class = UserInfoSerailzer
+    def post(self, request, format=None):
+        if request.user.is_authenticated:
+            serializer = UserInfoSerailzer(request.user)
+            data = request.data
+            user_phone = data['phone']
+            print(user_phone)
+            if CustomUser.objects.filter(phone_number=user_phone).exists():
+                return Response({"message" : "phone number allready taken"}, status=status.HTTP_409_CONFLICT)
+            otp = get_random_string(6, allowed_chars='0123456789')
+            user_info = CustomUser.objects.get(id=request.user.id)
+            user_info.otp = otp
+            otp_attempt_key = f"otp_attempt_{user_info.id}"
+            otp_timestamp_key = f"otp_timestamp_{user_info.id}"
+            cache.delete(otp_attempt_key)
+            cache.delete(otp_timestamp_key)
+            # account_sid = 'ACa6095633ef75a75b140001e7420df772'
+            # auth_token = '7e376a582a0d7fbe0d0d4547aab0b623'
+            # client = Client(account_sid, auth_token)
+
+            # message = client.messages.create(
+            # from_='+15209992869',
+            # body=f'Your otp is {otp}',
+            # to='+919420793421'
+            # )
+            # print(message.sid)
+            user_info.phone_number = user_phone
+            user_info.save()
+            print(otp)
+            return Response(serializer.data)
+        else:
+            message = {"message" : "you cannot generate otp"}
+            return Response(message, status=status.HTTP_401_UNAUTHORIZED)
+        
+class VerifyOtpApiView(APIView):
+    def post(self, request, format=None):
+        if request.user.is_authenticated:
+            user_info = CustomUser.objects.get(id=request.user.id)
+            data = request.data
+            otp_attempt_key = f"otp_attempt_{user_info.id}"
+            otp_timestamp_key = f"otp_timestamp_{user_info.id}"
+            current_time = timezone.now()
+            if cache.get(otp_attempt_key, 0) >=3:
+                last_attempt_time = cache.get(otp_timestamp_key)
+                if last_attempt_time and (current_time - last_attempt_time).total_seconds() < 300:
+                    user_info.phone_number = None
+                    user_info.save()
+                    return Response({"message": "Too many attempts please try again"})
+                cache.delete(otp_attempt_key)
+            if user_info.otp == data['otp']:
+                print(user_info.is_profile_completed)
+                user_phone = request.session.get("user_phone")
+                user_info.is_profile_completed = True
+                user_info.save()
+                cache.delete(otp_attempt_key)
+                return Response({"message" : "otp varified successfully"})
+            else:
+                attempts = cache.get(otp_attempt_key, 0)
+                cache.set(otp_attempt_key, attempts + 1, timeout=None)
+                print(attempts)
+                cache.set(otp_timestamp_key, current_time, timeout=None)
+                return Response({"message": "Invalid otp please try again"})
+        
+            return Response(request.data)
+
+            
 

@@ -24,9 +24,7 @@ class UserInfoSerailzer(serializers.ModelSerializer):
         for interest_data in interests_data:
             interest, created = InterestModel.objects.get_or_create(**interest_data)
             instance.interests.add(interest)
-
         return instance
-    
 
 class UserRegisterSerializer(serializers.ModelSerializer):
     username = serializers.CharField(required=True, write_only=True)
