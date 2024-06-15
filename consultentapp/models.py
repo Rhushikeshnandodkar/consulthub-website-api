@@ -98,6 +98,8 @@ class Event(models.Model):
     upcomming = models.BooleanField(default=False)
     insta_url = models.URLField(null=True, blank=True)
     linkedin_url = models.URLField(blank=True, null=True)
+    is_free_session = models.BooleanField(default=False)
+    free_left = models.IntegerField(null=True, blank=True)
 
     def __str__(self):
         return self.speaker_name

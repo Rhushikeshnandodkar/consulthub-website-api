@@ -200,16 +200,16 @@ class GenerateOtpApiView(APIView):
             otp_timestamp_key = f"otp_timestamp_{user_info.id}"
             cache.delete(otp_attempt_key)
             cache.delete(otp_timestamp_key)
-            # account_sid = 'ACa6095633ef75a75b140001e7420df772'
-            # auth_token = '7e376a582a0d7fbe0d0d4547aab0b623'
-            # client = Client(account_sid, auth_token)
+            account_sid = 'ACa6095633ef75a75b140001e7420df772'
+            auth_token = '7e376a582a0d7fbe0d0d4547aab0b623'
+            client = Client(account_sid, auth_token)
 
-            # message = client.messages.create(
-            # from_='+15209992869',
-            # body=f'Your otp is {otp}',
-            # to='+919420793421'
-            # )
-            # print(message.sid)
+            message = client.messages.create(
+            from_='+15209992869',
+            body=f'Your otp is {otp}',
+            to=f'+91{user_phone}'
+            )
+            print(message.sid)
             user_info.phone_number = user_phone
             user_info.save()
             print(otp)
@@ -245,8 +245,8 @@ class VerifyOtpApiView(APIView):
                 cache.set(otp_attempt_key, attempts + 1, timeout=None)
                 print(attempts)
                 cache.set(otp_timestamp_key, current_time, timeout=None)
-                return Response({"message": "Invalid otp please try again"})
-        
+                return Response({"message": "Invalid otp please try again"}, status=status.HTTP_401_UNAUTHORIZED)
+            
             return Response(request.data)
 
             

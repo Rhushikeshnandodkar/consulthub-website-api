@@ -5,6 +5,8 @@ class BookingSerializer(serializers.ModelSerializer):
     class Meta:
         model = ConsultBooking
         fields = '__all__'
+        read_only_fields = ['booking_user']
+
 
 class ShowBookingSerializer(serializers.ModelSerializer):
     consultent = ConsultentListSerializer()

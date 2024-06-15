@@ -138,7 +138,7 @@ class EventApiView(APIView):
             serializer = EventSerializer(upcomming_event)
             return Response(serializer.data, status=status.HTTP_200_OK)
         else:
-            return Response({"message":"data does not exists"})
+            return Response({"message":"data does not exists"}, status=status.HTTP_204_NO_CONTENT)
         
 class FetchCommunityApiView(ListAPIView):
     queryset = Community.objects.all()

@@ -20,6 +20,4 @@ urlpatterns = [
     path('get-otp', GenerateOtpApiView.as_view(), name="get-otp"),
     path('verify-otp', VerifyOtpApiView.as_view(), name="verify-otp"),
 
-
-
 ]
